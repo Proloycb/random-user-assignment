@@ -90,73 +90,61 @@ app.patch('/user/update/:id', (req, res) => {
 });
 
 
-// // update mulit user's information by update many
-// app.patch('/user/bulk-update', (req, res) => {
+// // update multiple user's information
+app.patch('/user/bulk-update', (req, res) => {
 
-//     //  req.body থেকে reqBody Obj কে নিব যেখানে প্রথম keyতে idsArray আছে আর বাকি গুলা হচ্ছে data4updateArray
-//     const reqBody = req.body
-//     const splittedReqBodyObj = Object.entries(reqBody)
-//     const idsArray = splittedReqBodyObj[0][1]
-//     const data4updateArray = splittedReqBodyObj.slice(1)
+    const reqBody = req.body;
+    const splittedReqBodyObj = Object.entries(reqBody)
+    const idsArray = splittedReqBodyObj[0][1]
+    const dataUpdateArray = splittedReqBodyObj.slice(1)
 
-//     // এবার data4updateArray কে data4updateObj বানাবো
-//     const data4updateObj = Object.fromEntries(data4updateArray)
+    const dataUpdateObj = Object.fromEntries(dataUpdateArray)
 
-//     // এবার database থেকে existingUsers নিয়ে আসব
-//     const existingUsers = getUserData()
+    const existingUsers = getUserData()
 
-//     // এবার existingUsers থেকে idsArray এর সাথে মিলে যাওয়া findRequiredUsers গুলাকে নিয়ে আসব
-//     const findRequiredUsers = existingUsers.filter(element => idsArray.includes(element.id));
-//     if (findRequiredUsers.length !== idsArray.length) {
-//         return res.status(409).send({ error: true, msg: 'user not exist' })
-//     }
+    const findRequiredUsers = existingUsers.filter(element => idsArray.includes(element.id));
+    if (findRequiredUsers.length !== idsArray.length) {
+        return res.status(409).send({ error: true, msg: 'user not exist' })
+    }
 
+    const nonUpdatedUsers = existingUsers.filter(user => !idsArray.includes(user.id))
 
-//     // এবার existingUsers থেকে idsArray এর সাথে না মিলে যাওয়া nonUpdatedUsers গুলাকে নিয়ে আসব
-//     const nonUpdatedUsers = existingUsers.filter(user => !idsArray.includes(user.id))
+    let theUpdatedUsers = []
+    for (let theUser2update of findRequiredUsers) {
+        for (const key in theUser2update) {
+            if (dataUpdateObj[key]) {
+                theUser2update[key] = dataUpdateObj[key]
+            } else {
+                theUser2update = { ...theUser2update, ...dataUpdateObj } // this line makes the put req to patch
+            }
+        }
+        theUpdatedUsers.push(theUser2update)
+    }
 
+    const allMergedUsers = [...nonUpdatedUsers, ...theUpdatedUsers]
+    saveUserData(allMergedUsers)
+    res.send({ success: true, msg: 'User data updated successfully' })
 
-//     // এবার findRequiredUsers এর উপরে forOf loop চালিয়ে তার ভিতরে individual theUser2update এর উপড়ে forIn loop চালিয়ে তার ভিতরে individual key গুলার সাথে data4updateObj এর সাথে মিলে যাওয়া key গুলার value আপডেট করব আর যেই যেই key গুলা না মিলে তাদেরকে theUser2update এর সাথে মার্জ করে theUpdatedUsers এ push করব
-//     let theUpdatedUsers = []
-//     for (let theUser2update of findRequiredUsers) {
-//         for (const key in theUser2update) {
-//             if (data4updateObj[key]) {
-//                 theUser2update[key] = data4updateObj[key]
-//             } else {
-//                 theUser2update = { ...theUser2update, ...data4updateObj } // this line makes the put req to patch
-//             }
-//         }
-//         theUpdatedUsers.push(theUser2update)
-//     }
-
-//     // এবার nonUpdatedUsers এ theUpdatedUsers গুলাকে push করব অথবা allMergedUsers এর ভিতরে এদের একসাথে মার্জ করব
-//     const allMergedUsers = [...nonUpdatedUsers, ...theUpdatedUsers]
-
-//     // সবশেষে database এ allMergedUsers গুলাকে সেভ করব 
-//     saveUserData(allMergedUsers)
-//     res.send({ success: true, msg: 'User data updated successfully' })
-
-// })
+})
 
 
 
-// // Delete a user's information in the .json file using its id
-// app.delete('/user/delete/:id', (req, res) => {
-//     //get the id from url
-//     const id = req.params.id
-//     //get the existing user data
-//     const existingUsers = getUserData()
-//     //check if the user id exist or not
-//     const findExist = existingUsers.find(user => user.id === id)
-//     if (!findExist) {
-//         return res.status(409).send({ error: true, msg: 'user not exist' })
-//     }
-//     //filter the userdata
-//     const nonDeletedUser = existingUsers.filter(user => user.id !== id)
-//     //finally save it
-//     saveUserData(nonDeletedUser)
-//     res.send({ success: true, msg: 'User data deleted successfully' })
-// })
+// // Delete a user's information
+app.delete('/user/delete/:id', (req, res) => {
+    const id = req.params.id;
+    //get the existing user data
+    const existingUsers = getUserData();
+    //check if the user id exist or not
+    const findExist = existingUsers.find(user => user.id === id)
+    if (!findExist) {
+        return res.status(409).send({ error: true, msg: 'user not exist' })
+    }
+    //filter the userdata
+    const nonDeletedUser = existingUsers.filter(user => user.id !== id)
+    //finally save it
+    saveUserData(nonDeletedUser)
+    res.send({ success: true, msg: 'User data deleted successfully' })
+})
 
 
 
