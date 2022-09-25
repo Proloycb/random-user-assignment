@@ -25,7 +25,7 @@ app.get('/user/random/:id', (req, res) => {
     } else {
         res.status(404).send({ error: true, msg: 'User not found' })
     }
-})
+});
 
 // get all user
 app.get('/user/all', (req, res) => {
@@ -38,7 +38,7 @@ app.get('/user/all', (req, res) => {
     } else {
         res.send(users)
     }
-})
+});
 
 // post user data
 app.post('/user/save', (req, res) => {
@@ -58,42 +58,36 @@ app.post('/user/save', (req, res) => {
     //save the new user data
     saveUserData(existingUsers);
     res.send({ success: true, msg: 'User data added successfully' })
-})
+});
+
+// // Update a user's information
+app.patch('/user/update/:id', (req, res) => {
+    const id = req.params.id;
+    const userData = req.body;
+    //get the existing user data
+    const existingUsers = getUserData();
+    //check if the user id exist or not       
+    let updatedUser = existingUsers.find(user => user.id === id)
+    if (!updatedUser) {
+        return res.status(409).send({ error: true, msg: 'user not exist' })
+    }
+    //filter the userdata
+    const nonUpdatedUser = existingUsers.filter(user => user.id !== id)
 
 
-
-
-
-// // Update a user's information in the .json file using its id
-// app.patch('/user/update/:id', (req, res) => {
-//     //get the id from url
-//     const id = req.params.id
-//     //get the update data
-//     const userData = req.body
-//     //get the existing user data
-//     const existingUsers = getUserData()
-//     //check if the user id exist or not       
-//     let theUser2update = existingUsers.find(user => user.id === id)
-//     if (!theUser2update) {
-//         return res.status(409).send({ error: true, msg: 'user not exist' })
-//     }
-//     //filter the userdata
-//     const nonUpdatedUser = existingUsers.filter(user => user.id !== id)
-
-
-//     //push the updated data
-//     for (const key in theUser2update) {
-//         if (userData[key]) {
-//             theUser2update[key] = userData[key]
-//         } else {
-//             theUser2update = { ...theUser2update, ...userData } // this line makes the put req to patch
-//         }
-//     }
-//     nonUpdatedUser.push(theUser2update)
-//     //finally save it
-//     saveUserData(nonUpdatedUser)
-//     res.send({ success: true, msg: 'User data updated successfully' })
-// })
+    //push the updated data
+    for (const key in updatedUser) {
+        if (userData[key]) {
+            updatedUser[key] = userData[key]
+        } else {
+            updatedUser = { ...updatedUser, ...userData } // this line makes the put req to patch
+        }
+    }
+    nonUpdatedUser.push(updatedUser)
+    //finally save it
+    saveUserData(nonUpdatedUser)
+    res.send({ success: true, msg: 'User data updated successfully' })
+});
 
 
 // // update mulit user's information by update many
