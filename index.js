@@ -40,28 +40,25 @@ app.get('/user/all', (req, res) => {
     }
 })
 
-// /* Create - POST method */
-// app.post('/user/save', (req, res) => {
-//     //get the existing user data
-//     const existingUsers = getUserData()
+// post user data
+app.post('/user/save', (req, res) => {
+    //get the existing user data
+    const existingUsers = getUserData();
+    const userData = req.body;
+    //check if the userData fields are missing
+    if (userData.name == null || userData.gender == null || userData.contact == null || userData.address == null || userData.photoUrl == null) {
+        return res.status(401).send({ error: true, msg: 'Some User information missing' })
+    }
+    // generate id and add in user data
+    const randomId = '#' + Math.floor(Math.random() * 16777215).toString(16);
+    userData.id = randomId
 
-//     //get the new user data from post request
-//     const userData = req.body
-//     //check if the userData fields are missing
-//     if (userData.gender == null || userData.name == null || userData.contact == null || userData.address == null || userData.photoUrl == null) {
-//         return res.status(401).send({ error: true, msg: 'Some User iformation missing' })
-//     }
-
-//     // generate id and add in user data
-//     const randomId = '#' + Math.floor(Math.random() * 16777215).toString(16);
-//     userData.id = randomId
-
-//     //append the user data
-//     existingUsers.push(userData)
-//     //save the new user data
-//     saveUserData(existingUsers);
-//     res.send({ success: true, msg: 'User data added successfully' })
-// })
+    //append the user data
+    existingUsers.push(userData)
+    //save the new user data
+    saveUserData(existingUsers);
+    res.send({ success: true, msg: 'User data added successfully' })
+})
 
 
 

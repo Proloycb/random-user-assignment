@@ -5,7 +5,7 @@
         "gender": "male",
         "contact": "01785555525",
         "address": "Dhaka",
-        "photourl": "https://i.ibb.co/9rRPw7G/product-6.webp"
+        "photoUrl": "https://i.ibb.co/9rRPw7G/product-6.webp"
     },
     {
         "id": "2",
@@ -13,7 +13,7 @@
         "gender": "male",
         "contact": "01785555525",
         "address": "Dhaka",
-        "photourl": "https://i.ibb.co/9rRPw7G/product-6.webp"
+        "photoUrl": "https://i.ibb.co/9rRPw7G/product-6.webp"
     },
     {
         "id": "3",
@@ -21,7 +21,7 @@
         "gender": "male",
         "contact": "01785555525",
         "address": "Dhaka",
-        "photourl": "https://i.ibb.co/9rRPw7G/product-6.webp"
+        "photoUrl": "https://i.ibb.co/9rRPw7G/product-6.webp"
     },
     {
         "id": "4",
@@ -29,6 +29,14 @@
         "gender": "male",
         "contact": "01785555525",
         "address": "Dhaka",
-        "photourl": "https://i.ibb.co/9rRPw7G/product-6.webp"
+        "photoUrl": "https://i.ibb.co/9rRPw7G/product-6.webp"
+    },
+    {
+        "name": "Jahim",
+        "gender": "male",
+        "contact": "01711111111",
+        "address": "Kulna",
+        "photoUrl": "https://i.ibb.co/9rRPw7G/product-7.webp",
+        "id": "#a586e1"
     }
 ]
