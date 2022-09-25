@@ -16,6 +16,17 @@ app.get('/user/random', (req, res) => {
     res.send(randomUser)
 });
 
+// get user by id
+app.get('/user/random/:id', (req, res) => {
+    const users = getUserData()
+    const user = users.find(user => user.id === req.params.id)
+    if (user) {
+        res.send(user)
+    } else {
+        res.status(404).send({ error: true, msg: 'User not found' })
+    }
+})
+
 // get all user
 app.get('/user/all', (req, res) => {
     const limit = req.query.limit
@@ -54,19 +65,6 @@ app.get('/user/all', (req, res) => {
 
 
 
-
-
-
-// get user by id
-// app.get('/user/random/:id', (req, res) => {
-//     const users = getUserData()
-//     const user = users.find(user => user.id === req.params.id)
-//     if (user) {
-//         res.send(user)
-//     } else {
-//         res.status(404).send({ error: true, msg: 'User not found' })
-//     }
-// })
 
 
 // // Update a user's information in the .json file using its id
