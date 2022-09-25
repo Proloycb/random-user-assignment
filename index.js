@@ -16,6 +16,19 @@ app.get('/user/random', (req, res) => {
     res.send(randomUser)
 });
 
+// get all user
+app.get('/user/all', (req, res) => {
+    const limit = req.query.limit
+    const users = getUserData()
+
+    if (limit) {
+        const limitedUsers = users.slice(0, limit)
+        res.send(limitedUsers)
+    } else {
+        res.send(users)
+    }
+})
+
 // /* Create - POST method */
 // app.post('/user/save', (req, res) => {
 //     //get the existing user data
@@ -40,18 +53,7 @@ app.get('/user/random', (req, res) => {
 // })
 
 
-/* Read - GET method */
-// app.get('/user/all', (req, res) => {
-//     const limit = req.query.limit
-//     const users = getUserData()
 
-//     if (limit) {
-//         const limitedUsers = users.slice(0, limit)
-//         res.send(limitedUsers)
-//     } else {
-//         res.send(users)
-//     }
-// })
 
 
 
